@@ -133,9 +133,10 @@ public class MainActivity extends AppCompatActivity {
 
                             MessageChat messageChat = new MessageChat(receivedMessage, false);
                             messageChatList.add(messageChat);
-                            chatAdapter = new ChatAdapter(messageChatList);
+                           /* chatAdapter = new ChatAdapter(messageChatList);
                             messageRecyclerView.setLayoutManager(linearLayoutManager);
-                            messageRecyclerView.setAdapter(chatAdapter);
+                            messageRecyclerView.setAdapter(chatAdapter);*/
+                            chatAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
