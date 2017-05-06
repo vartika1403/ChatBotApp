@@ -10,9 +10,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +29,6 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final String MESSAGES_CHILD = "chat-message";
     private static final String URL ="https://www.personalityforge.com/api/chat/?apiKey=6nt5d1nJHkqbkphe&message=Hi&chatBotID=63906&externalID=chirag1";
     @BindView(R.id.message_edit_text) /* package-local */ EditText messageEditText;
     @BindView(R.id.messenger_send_button) /* package-local */ Button sendButton;
@@ -40,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private List<MessageChat> messageChatList;
     private LinearLayoutManager linearLayoutManager;
     private ChatAdapter chatAdapter;
-    private boolean rightSide = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
                                                    }
                                                });
-        /*chatAdapter = new ChatAdapter(messageChatList);
-        messageRecyclerView.setLayoutManager(linearLayoutManager);
-        messageRecyclerView.setAdapter(chatAdapter);*/
     }
 
     @OnClick(R.id.messenger_send_button)
@@ -85,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         messageRecyclerView.setAdapter(chatAdapter);
         sendMessageToServer();
         messageEditText.setText("");
-        //send data to server http request
-        //sendMessageToServer();
     }
 
     private void sendMessageToServer() {
@@ -102,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 .addQueryParameter("chatBotID","63906")
                 .addQueryParameter("externalID","chirag1")
                 .build();
-        Log.i(LOG_TAG, "url," + url);
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -123,26 +112,16 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                       // txtString.setText(myResponse);
                         try {
                             JSONObject jsonObj = new JSONObject(myResponse);
                             JSONObject object = jsonObj.getJSONObject("message");
-                            Log.i(LOG_TAG, "object," + object);
                             String receivedMessage = object.getString("message");
-                            Log.i(LOG_TAG, "receivedMessage," + receivedMessage);
-
                             MessageChat messageChat = new MessageChat(receivedMessage, false);
                             messageChatList.add(messageChat);
-                           /* chatAdapter = new ChatAdapter(messageChatList);
-                            messageRecyclerView.setLayoutManager(linearLayoutManager);
-                            messageRecyclerView.setAdapter(chatAdapter);*/
                             chatAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        Log.i(LOG_TAG, "response," + myResponse);
-
                     }
                 });
 
