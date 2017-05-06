@@ -10,6 +10,12 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private List<MessageChat> messageChatList;
     private LinearLayoutManager linearLayoutManager;
     private ChatAdapter chatAdapter;
+    private boolean rightSide = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,23 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
                                                    }
                                                });
-        chatAdapter = new ChatAdapter(messageChatList);
+        /*chatAdapter = new ChatAdapter(messageChatList);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
-        messageRecyclerView.setAdapter(chatAdapter);
+        messageRecyclerView.setAdapter(chatAdapter);*/
     }
 
     @OnClick(R.id.messenger_send_button)
     void sendMessage() {
-        MessageChat messageChat = new MessageChat(messageEditText.getText().toString());
+        MessageChat messageChat = new MessageChat(messageEditText.getText().toString(), true);
         messageChatList.add(messageChat);
-        sendMessageToServer();
-        messageEditText.setText("");
         chatAdapter = new ChatAdapter(messageChatList);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
         messageRecyclerView.setAdapter(chatAdapter);
+        sendMessageToServer();
+        messageEditText.setText("");
         //send data to server http request
         //sendMessageToServer();
-
     }
 
     private void sendMessageToServer() {
@@ -118,6 +124,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                        // txtString.setText(myResponse);
+                        try {
+                            JSONObject jsonObj = new JSONObject(myResponse);
+                            JSONObject object = jsonObj.getJSONObject("message");
+                            Log.i(LOG_TAG, "object," + object);
+                            String receivedMessage = object.getString("message");
+                            Log.i(LOG_TAG, "receivedMessage," + receivedMessage);
+
+                            MessageChat messageChat = new MessageChat(receivedMessage, false);
+                            messageChatList.add(messageChat);
+                            chatAdapter = new ChatAdapter(messageChatList);
+                            messageRecyclerView.setLayoutManager(linearLayoutManager);
+                            messageRecyclerView.setAdapter(chatAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         Log.i(LOG_TAG, "response," + myResponse);
 
                     }

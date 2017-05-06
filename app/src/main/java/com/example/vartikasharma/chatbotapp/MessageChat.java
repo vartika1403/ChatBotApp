@@ -5,12 +5,14 @@ public class MessageChat {
     private String id;
     private String text;
     private String name;
+    private boolean rightSide;
 
     public MessageChat() {
 
     }
-    public MessageChat(String text) {
+    public MessageChat(String text, boolean rightSide) {
         this.text = text;
+        this.rightSide = rightSide;
     }
 
     public String getId() {
@@ -35,5 +37,12 @@ public class MessageChat {
 
     public String getText() {
         return text;
+    }
+    public boolean isRightSide() {
+        return rightSide;
+    }
+
+    public void setRightSide(boolean rightSide) {
+        this.rightSide = rightSide;
     }
 }
