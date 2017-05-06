@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/left_side"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -26,5 +27,40 @@
             android:layout_height="56dp" />
 
     </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_side"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/receiver_text_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_message_background"
+                android:maxWidth="120dp"
+                android:minWidth="70dp"
+                android:padding="10dp"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+
+           <!-- <TextView
+                android:id="@+id/receiver_time_stamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/card_expand_title_color"
+                android:textSize="12sp" />-->
+
+        </LinearLayout>
+
 
 </RelativeLayout>
