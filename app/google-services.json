@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "575980222719",
+    "firebase_url": "https://androidchatproject-9a048.firebaseio.com",
+    "project_id": "androidchatproject-9a048",
+    "storage_bucket": "androidchatproject-9a048.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575980222719:android:cd96545b5f72f2ba",
+        "android_client_info": {
+          "package_name": "com.example.vartikasharma.chatbotapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575980222719-2pd18hv2rochaupv4gc0fvvsg2j4ad5c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc40coVfi1gws4PCTQRVUyvq0jBPiQ4AY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

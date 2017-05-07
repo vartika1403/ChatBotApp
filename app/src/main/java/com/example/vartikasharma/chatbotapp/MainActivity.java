@@ -9,6 +9,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,49 +34,66 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final String URL ="https://www.personalityforge.com/api/chat/?apiKey=6nt5d1nJHkqbkphe&message=Hi&chatBotID=63906&externalID=chirag1";
     @BindView(R.id.message_edit_text) /* package-local */ EditText messageEditText;
     @BindView(R.id.messenger_send_button) /* package-local */ Button sendButton;
     @BindView(R.id.message_recycler_view) /* package-local */ RecyclerView messageRecyclerView;
     private List<MessageChat> messageChatList;
     private LinearLayoutManager linearLayoutManager;
     private ChatAdapter chatAdapter;
+    private DatabaseReference firebaseChatRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        FirebaseApp.initializeApp(this);
+        String chatId = "chirag1".concat("63906");
+        Log.i(LOG_TAG, "chatId, " + chatId);
+        String userConversationUri = Conf.firebaseConverstionUri(chatId);
+        if (userConversationUri == null || userConversationUri.isEmpty()) {
+            Log.i(LOG_TAG, "Empty userConversationUri");
+            Toast.makeText(MainActivity.this, R.string.toast_error_message_on_displaying_conversation,
+                    Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            Log.i(LOG_TAG, "firebase userConversationUri, " + userConversationUri);
+        }
+        firebaseChatRef = FirebaseDatabase.getInstance().getReferenceFromUrl(userConversationUri);
+        if (firebaseChatRef == null) {
+            return;
+        }
 
         messageChatList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         messageEditText.addTextChangedListener(new TextWatcher() {
-                                                   @Override
-                                                   public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                                                   }
+            }
 
-                                                   @Override
-                                                   public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                                       if (charSequence.toString().trim().length() > 0) {
-                                                           sendButton.setEnabled(true);
-                                                       } else {
-                                                           sendButton.setEnabled(false);
-                                                       }
-                                                   }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    sendButton.setEnabled(true);
+                } else {
+                    sendButton.setEnabled(false);
+                }
+            }
 
-                                                   @Override
-                                                   public void afterTextChanged(Editable editable) {
+            @Override
+            public void afterTextChanged(Editable editable) {
 
-                                                   }
-                                               });
+            }
+        });
     }
 
     @OnClick(R.id.messenger_send_button)
     void sendMessage() {
         MessageChat messageChat = new MessageChat(messageEditText.getText().toString(), true);
         messageChatList.add(messageChat);
+        firebaseChatRef.push().setValue(messageChat);
         chatAdapter = new ChatAdapter(messageChatList);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
         messageRecyclerView.setAdapter(chatAdapter);
@@ -119,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
                             MessageChat messageChat = new MessageChat(receivedMessage, false);
                             messageChatList.add(messageChat);
                             chatAdapter.notifyDataSetChanged();
+
+                            firebaseChatRef.push().setValue(messageChat);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
