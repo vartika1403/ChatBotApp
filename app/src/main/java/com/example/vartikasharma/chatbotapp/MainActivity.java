@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         FirebaseApp.initializeApp(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         String chatId = "chirag1".concat("63906");
         String userConversationUri = Conf.firebaseConverstionUri(chatId);
         if (userConversationUri == null || userConversationUri.isEmpty()) {
