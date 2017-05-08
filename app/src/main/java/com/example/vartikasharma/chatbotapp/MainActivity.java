@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.messenger_send_button) /* package-local */ Button sendButton;
     @BindView(R.id.message_recycler_view) /* package-local */ RecyclerView messageRecyclerView;
     private List<MessageChat> messageChatList;
-    private LinearLayoutManager linearLayoutManager;
     private ChatAdapter chatAdapter;
     private DatabaseReference firebaseChatRef;
 
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         FirebaseApp.initializeApp(this);
         String chatId = "chirag1".concat("63906");
-        Log.i(LOG_TAG, "chatId, " + chatId);
         String userConversationUri = Conf.firebaseConverstionUri(chatId);
         if (userConversationUri == null || userConversationUri.isEmpty()) {
             Log.i(LOG_TAG, "Empty userConversationUri");
@@ -68,16 +66,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         messageChatList = new ArrayList<>();
-        linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
 
         firebaseChatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot itemDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.i(LOG_TAG, "itemDatasnapshot," + itemDataSnapshot);
-                      MessageChat messageChat = itemDataSnapshot.getValue(MessageChat.class);
-                    Log.i(LOG_TAG, "messageChat, " + messageChat);
+                    MessageChat messageChat = itemDataSnapshot.getValue(MessageChat.class);
                     messageChatList.add(messageChat);
                 }
             }
@@ -124,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendMessageToServer() {
         String message = messageEditText.getText().toString();
-        Log.i(LOG_TAG, "message," + message);
         HttpUrl url = new HttpUrl.Builder()
                 .scheme("https")
                 .host("www.personalityforge.com")
@@ -132,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
                 .addPathSegment("chat")
                 .addQueryParameter("apiKey", "6nt5d1nJHkqbkphe")
                 .addQueryParameter("message", message)
-                .addQueryParameter("chatBotID","63906")
-                .addQueryParameter("externalID","chirag1")
+                .addQueryParameter("chatBotID", "63906")
+                .addQueryParameter("externalID", "chirag1")
                 .build();
         OkHttpClient client = new OkHttpClient();
 
@@ -174,5 +169,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    }
+}
 

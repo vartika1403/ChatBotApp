@@ -11,24 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
     private static String LOG_TAG = ChatAdapter.class.getSimpleName();
     private List<MessageChat> messageChatList;
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView messageSenderTextView;
-        TextView messageReceiverTextView;
-        LinearLayout leftSide;
-        LinearLayout rightSide;
-
-        public MyViewHolder(View view) {
-            super(view);
-            leftSide = (LinearLayout) view.findViewById(R.id.left_side);
-            rightSide = (LinearLayout) view.findViewById(R.id.right_side);
-            messageSenderTextView = (TextView) view.findViewById(R.id.sender_text_message);
-            messageReceiverTextView = (TextView) view.findViewById(R.id.receiver_text_message);
-        }
-    }
 
     public ChatAdapter(List<MessageChat> messageChatList) {
         this.messageChatList = messageChatList;
@@ -45,9 +30,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         MessageChat messageChat = messageChatList.get(position);
-        if (!messageChat.getText().isEmpty() && position >= 0 && position!= position-1) {
+        if (!messageChat.getText().isEmpty() && position >= 0 && position != position - 1) {
             if (messageChat.isRightSide()) {
-                Log.i(LOG_TAG, "right side," + messageChat.getText());
                 holder.messageSenderTextView.invalidate();
                 holder.messageReceiverTextView.invalidate();
                 holder.messageReceiverTextView.setText("");
@@ -55,7 +39,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
                 holder.messageSenderTextView.setBackgroundResource(R.drawable.text_message_background);
                 holder.messageSenderTextView.setText(messageChat.getText());
             } else {
-                Log.i(LOG_TAG, "left side," + messageChat.getText());
                 holder.messageReceiverTextView.invalidate();
                 holder.messageSenderTextView.invalidate();
                 holder.messageSenderTextView.setText("");
@@ -68,6 +51,21 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
 
     @Override
     public int getItemCount() {
-        return  messageChatList.size();
+        return messageChatList.size();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView messageSenderTextView;
+        TextView messageReceiverTextView;
+        LinearLayout leftSide;
+        LinearLayout rightSide;
+
+        public MyViewHolder(View view) {
+            super(view);
+            leftSide = (LinearLayout) view.findViewById(R.id.left_side);
+            rightSide = (LinearLayout) view.findViewById(R.id.right_side);
+            messageSenderTextView = (TextView) view.findViewById(R.id.sender_text_message);
+            messageReceiverTextView = (TextView) view.findViewById(R.id.receiver_text_message);
+        }
     }
 }
