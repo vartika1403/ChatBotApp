@@ -12,8 +12,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +70,23 @@ public class MainActivity extends AppCompatActivity {
         messageChatList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
+
+        firebaseChatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot itemDataSnapshot : dataSnapshot.getChildren()) {
+                    Log.i(LOG_TAG, "itemDatasnapshot," + itemDataSnapshot);
+                      MessageChat messageChat = itemDataSnapshot.getValue(MessageChat.class);
+                    Log.i(LOG_TAG, "messageChat, " + messageChat);
+                    messageChatList.add(messageChat);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -87,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        chatAdapter = new ChatAdapter(messageChatList);
+        messageRecyclerView.setLayoutManager(linearLayoutManager);
+        messageRecyclerView.setAdapter(chatAdapter);
     }
 
     @OnClick(R.id.messenger_send_button)
@@ -94,9 +117,7 @@ public class MainActivity extends AppCompatActivity {
         MessageChat messageChat = new MessageChat(messageEditText.getText().toString(), true);
         messageChatList.add(messageChat);
         firebaseChatRef.push().setValue(messageChat);
-        chatAdapter = new ChatAdapter(messageChatList);
-        messageRecyclerView.setLayoutManager(linearLayoutManager);
-        messageRecyclerView.setAdapter(chatAdapter);
+        chatAdapter.notifyDataSetChanged();
         sendMessageToServer();
         messageEditText.setText("");
     }

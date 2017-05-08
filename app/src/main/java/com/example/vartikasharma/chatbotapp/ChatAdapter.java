@@ -2,6 +2,7 @@ package com.example.vartikasharma.chatbotapp;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,14 +45,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         MessageChat messageChat = messageChatList.get(position);
-        if(messageChat.isRightSide()) {
-            holder.messageSenderTextView.invalidate();
-            holder.messageReceiverTextView.setVisibility(View.INVISIBLE);
-            holder.messageSenderTextView.setText(messageChat.getText());
-        } else {
-            holder.messageReceiverTextView.invalidate();
-            holder.messageSenderTextView.setVisibility(View.INVISIBLE);
-            holder.messageReceiverTextView.setText(messageChat.getText());
+        if (!messageChat.getText().isEmpty() && position >= 0 && position!= position-1) {
+            if (messageChat.isRightSide()) {
+                Log.i(LOG_TAG, "right side," + messageChat.getText());
+                holder.messageSenderTextView.invalidate();
+                holder.messageReceiverTextView.setVisibility(View.INVISIBLE);
+                holder.messageSenderTextView.setText(messageChat.getText());
+            } else {
+                Log.i(LOG_TAG, "left side," + messageChat.getText());
+                holder.messageReceiverTextView.invalidate();
+                holder.messageSenderTextView.setVisibility(View.INVISIBLE);
+                holder.messageReceiverTextView.setText(messageChat.getText());
+            }
         }
     }
 
