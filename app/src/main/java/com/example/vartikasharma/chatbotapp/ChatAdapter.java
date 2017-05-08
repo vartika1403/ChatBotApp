@@ -49,12 +49,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder>{
             if (messageChat.isRightSide()) {
                 Log.i(LOG_TAG, "right side," + messageChat.getText());
                 holder.messageSenderTextView.invalidate();
-                holder.messageReceiverTextView.setVisibility(View.INVISIBLE);
+                holder.messageReceiverTextView.invalidate();
+                holder.messageReceiverTextView.setText("");
+                holder.messageReceiverTextView.setBackgroundResource(0);
+                holder.messageSenderTextView.setBackgroundResource(R.drawable.text_message_background);
                 holder.messageSenderTextView.setText(messageChat.getText());
             } else {
                 Log.i(LOG_TAG, "left side," + messageChat.getText());
                 holder.messageReceiverTextView.invalidate();
-                holder.messageSenderTextView.setVisibility(View.INVISIBLE);
+                holder.messageSenderTextView.invalidate();
+                holder.messageSenderTextView.setText("");
+                holder.messageSenderTextView.setBackgroundResource(0);
+                holder.messageReceiverTextView.setBackgroundResource(R.drawable.text_message_background);
                 holder.messageReceiverTextView.setText(messageChat.getText());
             }
         }
